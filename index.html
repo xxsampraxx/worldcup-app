@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>World Cup 2026 Tracker</title>
+  <title>World Cup Fixtures</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -12,59 +12,63 @@
       padding: 20px;
     }
 
-    h1 {
-      color: #00ffcc;
-      margin-bottom: 5px;
-    }
+    h1 { color: #00ffcc; }
 
     .box {
       background: #1a2233;
-      margin: 12px 0;
+      margin: 10px 0;
       padding: 15px;
       border-radius: 12px;
     }
 
-    .tag {
-      display: inline-block;
-      padding: 5px 10px;
-      background: #00ffcc;
-      color: black;
-      border-radius: 20px;
-      font-size: 12px;
-      margin-top: 5px;
+    .match {
+      padding: 10px;
+      border-bottom: 1px solid #333;
     }
 
-    .match {
-      border-bottom: 1px solid #333;
-      padding: 10px 0;
+    .time {
+      color: #00ffcc;
+      font-size: 12px;
     }
   </style>
 </head>
-
 <body>
 
-<h1>⚽ World Cup 2026</h1>
-<div class="tag">Official Tracker</div>
+<h1>⚽ World Cup Fixtures</h1>
 
 <div class="box">
-  <h2>📅 Status</h2>
-  <p id="status">Loading...</p>
+  <h2>📅 Today</h2>
+  <p id="today"></p>
 </div>
 
 <div class="box">
-  <h2>🏆 Information</h2>
-  <p>World Cup matches will appear here when fixtures are released.</p>
-  <p>No fake scores — only real data when available.</p>
-</div>
+  <h2>🏟 Fixtures</h2>
 
-<div class="box">
-  <h2>📊 Upcoming Matches</h2>
-  <p>Waiting for official schedule...</p>
+  <div class="match">
+    <b>Qatar vs Ecuador</b><br>
+    <span class="time">Opening Match</span>
+  </div>
+
+  <div class="match">
+    <b>England vs USA</b><br>
+    <span class="time">Group Stage</span>
+  </div>
+
+  <div class="match">
+    <b>Argentina vs Mexico</b><br>
+    <span class="time">Group Stage</span>
+  </div>
+
+  <div class="match">
+    <b>France vs Denmark</b><br>
+    <span class="time">Group Stage</span>
+  </div>
+
 </div>
 
 <script>
-document.getElementById("status").innerText =
-  "Updated ✔ " + new Date().toDateString();
+document.getElementById("today").innerText =
+  new Date().toDateString();
 </script>
 
 </body>
