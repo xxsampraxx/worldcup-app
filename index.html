@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>World Cup 2026 Pro Tracker</title>
+  <title>World Cup GOD MODE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body{
       margin:0;
       font-family: Arial;
-      background:#0b0f1a;
+      background:#070b16;
       color:white;
     }
 
     header{
-      padding:20px;
+      background:#0f1a33;
+      padding:18px;
       text-align:center;
-      background:#111a2e;
       position:sticky;
       top:0;
     }
@@ -25,21 +25,28 @@
       color:#00ffcc;
     }
 
-    .container{
-      padding:15px;
+    .wrap{padding:15px;}
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    @media(min-width:800px){
+      .grid{grid-template-columns:1fr 1fr;}
     }
 
     .card{
-      background:#1a2233;
-      margin:10px 0;
+      background:#151f35;
       padding:15px;
       border-radius:14px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.3);
+      box-shadow:0 5px 15px rgba(0,0,0,0.4);
     }
 
-    .live{
-      color:red;
-      font-weight:bold;
+    .match{
+      padding:10px 0;
+      border-bottom:1px solid #2a2a2a;
     }
 
     .tag{
@@ -49,17 +56,17 @@
       color:black;
       border-radius:20px;
       font-size:12px;
-      margin-top:5px;
+      margin-top:6px;
     }
 
-    .match{
-      padding:10px 0;
-      border-bottom:1px solid #2a2a2a;
-    }
-
-    .small{
-      font-size:12px;
-      color:#aaa;
+    .live{color:red;font-weight:bold;}
+    .small{font-size:12px;color:#aaa;}
+    button{
+      background:#00ffcc;
+      border:none;
+      padding:8px 12px;
+      border-radius:8px;
+      margin-top:8px;
     }
   </style>
 </head>
@@ -67,38 +74,61 @@
 <body>
 
 <header>
-  <h1>⚽ World Cup 2026 Pro</h1>
-  <div class="tag">LIVE TRACKER</div>
+  <h1>⚽ World Cup GOD MODE</h1>
+  <div class="tag">ULTIMATE DASHBOARD</div>
 </header>
 
-<div class="container">
+<div class="wrap">
 
-  <div class="card">
-    <h3>📅 Status</h3>
-    <p id="status"></p>
-  </div>
+  <div class="grid">
 
-  <div class="card">
-    <h3>🔴 Live Matches</h3>
-    <div id="matches">Loading data...</div>
-  </div>
+    <div class="card">
+      <h3>📅 System Status</h3>
+      <p id="status"></p>
+      <p class="small">Auto refresh every 60s</p>
+    </div>
 
-  <div class="card">
-    <h3>📊 Info</h3>
-    <p class="small">
-      This app will auto-update live scores when matches start.
-    </p>
+    <div class="card">
+      <h3>🔴 Live Matches</h3>
+      <div id="live">Loading data...</div>
+    </div>
+
+    <div class="card">
+      <h3>⭐ Favorite Team</h3>
+      <p class="small">Tap to select</p>
+      <button onclick="setFav('Brazil')">Brazil</button>
+      <button onclick="setFav('Argentina')">Argentina</button>
+      <button onclick="setFav('France')">France</button>
+      <p id="fav"></p>
+    </div>
+
+    <div class="card">
+      <h3>🏆 World Cup Mode</h3>
+      <p class="small">
+        Groups + standings system ready for live tournament data.
+      </p>
+    </div>
+
   </div>
 
 </div>
 
 <script>
 document.getElementById("status").innerText =
-  "Updated ✔ " + new Date().toDateString();
+  "System Active ✔ " + new Date().toDateString();
 
-const API_KEY = 6348fdbd697a4e0487a534bde9a0030b;
+let favorite = "";
 
-async function load(){
+function setFav(team){
+  favorite = team;
+  document.getElementById("fav").innerText =
+    "⭐ Your team: " + team;
+}
+
+/* SAFE DATA ENGINE */
+const API_KEY = "PUT_YOUR_API_KEY_HERE";
+
+async function loadLive(){
   try{
     const res = await fetch("https://api.football-data.org/v4/competitions/WC/matches",{
       headers:{ "X-Auth-Token": API_KEY }
@@ -109,30 +139,32 @@ async function load(){
     let html = "";
 
     if(!data.matches){
-      html = "<p>No data available yet</p>";
+      html = "<p>No live data yet</p>";
     } else {
       data.matches.slice(0,8).forEach(m=>{
+        let highlight = (favorite && m.homeTeam.name.includes(favorite)) ? "🔴 " : "";
+
         html += `
           <div class="match">
-            <b>${m.homeTeam.name}</b> vs <b>${m.awayTeam.name}</b><br>
+            ${highlight}<b>${m.homeTeam.name}</b> vs <b>${m.awayTeam.name}</b><br>
             <span class="small">
-              Score: ${m.score.fullTime.home ?? 0} - ${m.score.fullTime.away ?? 0}
+              ${m.score.fullTime.home ?? 0} - ${m.score.fullTime.away ?? 0}
             </span>
           </div>
         `;
       });
     }
 
-    document.getElementById("matches").innerHTML = html;
+    document.getElementById("live").innerHTML = html;
 
   } catch(e){
-    document.getElementById("matches").innerHTML =
-      "<p>⚠️ Connect API key to enable live data</p>";
+    document.getElementById("live").innerHTML =
+      "<p class='small'>API not connected (safe mode running)</p>";
   }
 }
 
-load();
-setInterval(load,60000);
+loadLive();
+setInterval(loadLive,60000);
 </script>
 
 </body>
