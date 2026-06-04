@@ -1,80 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>World Cup 2026 Live Tracker</title>
+  <title>World Cup 2026 Pro Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body {
+    body{
+      margin:0;
       font-family: Arial;
-      background: #0b0f1a;
-      color: white;
-      text-align: center;
-      padding: 20px;
+      background:#0b0f1a;
+      color:white;
     }
 
-    h1 { color: #00ffcc; }
-
-    .box {
-      background: #1a2233;
-      margin: 10px 0;
-      padding: 15px;
-      border-radius: 12px;
+    header{
+      padding:20px;
+      text-align:center;
+      background:#111a2e;
+      position:sticky;
+      top:0;
     }
 
-    .match {
-      padding: 10px;
-      border-bottom: 1px solid #333;
+    h1{
+      margin:0;
+      color:#00ffcc;
     }
 
-    .live {
-      color: #ff4444;
-      font-weight: bold;
+    .container{
+      padding:15px;
     }
 
-    .small {
-      color: #aaa;
-      font-size: 13px;
+    .card{
+      background:#1a2233;
+      margin:10px 0;
+      padding:15px;
+      border-radius:14px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .live{
+      color:red;
+      font-weight:bold;
+    }
+
+    .tag{
+      display:inline-block;
+      padding:4px 10px;
+      background:#00ffcc;
+      color:black;
+      border-radius:20px;
+      font-size:12px;
+      margin-top:5px;
+    }
+
+    .match{
+      padding:10px 0;
+      border-bottom:1px solid #2a2a2a;
+    }
+
+    .small{
+      font-size:12px;
+      color:#aaa;
     }
   </style>
 </head>
 
 <body>
 
-<h1>⚽ World Cup 2026 Tracker</h1>
+<header>
+  <h1>⚽ World Cup 2026 Pro</h1>
+  <div class="tag">LIVE TRACKER</div>
+</header>
 
-<div class="box">
-  <h2>📅 Tournament Status</h2>
-  <p id="status"></p>
-</div>
+<div class="container">
 
-<div class="box">
-  <h2>🏟 Opening Matches (Official Structure)</h2>
-
-  <div class="match">
-    <b>Mexico vs South Africa</b><br>
-    <span class="small">June 11, 2026 — Opening Match</span>
+  <div class="card">
+    <h3>📅 Status</h3>
+    <p id="status"></p>
   </div>
 
-  <div class="match">
-    <b>Canada vs Bosnia & Herzegovina</b><br>
-    <span class="small">June 12, 2026</span>
+  <div class="card">
+    <h3>🔴 Live Matches</h3>
+    <div id="matches">Loading data...</div>
   </div>
 
-  <div class="match">
-    <b>USA vs Paraguay</b><br>
-    <span class="small">June 12, 2026</span>
+  <div class="card">
+    <h3>📊 Info</h3>
+    <p class="small">
+      This app will auto-update live scores when matches start.
+    </p>
   </div>
-</div>
 
-<div class="box">
-  <h2>🔴 Live Section</h2>
-  <p class="live">No live matches yet</p>
-  <p class="small">Live scores will auto-update when tournament starts</p>
 </div>
 
 <script>
 document.getElementById("status").innerText =
   "Updated ✔ " + new Date().toDateString();
+
+const API_KEY = 6348fdbd697a4e0487a534bde9a0030b;
+
+async function load(){
+  try{
+    const res = await fetch("https://api.football-data.org/v4/competitions/WC/matches",{
+      headers:{ "X-Auth-Token": API_KEY }
+    });
+
+    const data = await res.json();
+
+    let html = "";
+
+    if(!data.matches){
+      html = "<p>No data available yet</p>";
+    } else {
+      data.matches.slice(0,8).forEach(m=>{
+        html += `
+          <div class="match">
+            <b>${m.homeTeam.name}</b> vs <b>${m.awayTeam.name}</b><br>
+            <span class="small">
+              Score: ${m.score.fullTime.home ?? 0} - ${m.score.fullTime.away ?? 0}
+            </span>
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById("matches").innerHTML = html;
+
+  } catch(e){
+    document.getElementById("matches").innerHTML =
+      "<p>⚠️ Connect API key to enable live data</p>";
+  }
+}
+
+load();
+setInterval(load,60000);
 </script>
 
 </body>
