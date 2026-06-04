@@ -1,8 +1,7 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>World Cup App</title>
+  <title>World Cup 2026 Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -12,34 +11,60 @@
       text-align: center;
       padding: 20px;
     }
-    h1 { color: #00ffcc; }
+
+    h1 {
+      color: #00ffcc;
+      margin-bottom: 5px;
+    }
+
     .box {
       background: #1a2233;
-      margin: 10px;
+      margin: 12px 0;
       padding: 15px;
-      border-radius: 10px;
+      border-radius: 12px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      background: #00ffcc;
+      color: black;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .match {
+      border-bottom: 1px solid #333;
+      padding: 10px 0;
     }
   </style>
 </head>
+
 <body>
 
-<h1>⚽ World Cup App</h1>
+<h1>⚽ World Cup 2026</h1>
+<div class="tag">Official Tracker</div>
 
 <div class="box">
-  <h2>Status</h2>
-  <p id="status"></p>
+  <h2>📅 Status</h2>
+  <p id="status">Loading...</p>
 </div>
 
 <div class="box">
-  <h2>Matches</h2>
-  <p>Brazil vs Germany (2 - 1)</p>
-  <p>Argentina vs France (1 - 1)</p>
-  <p>Spain vs Portugal (0 - 2)</p>
+  <h2>🏆 Information</h2>
+  <p>World Cup matches will appear here when fixtures are released.</p>
+  <p>No fake scores — only real data when available.</p>
+</div>
+
+<div class="box">
+  <h2>📊 Upcoming Matches</h2>
+  <p>Waiting for official schedule...</p>
 </div>
 
 <script>
 document.getElementById("status").innerText =
-  "Working ✔ " + new Date().toDateString();
+  "Updated ✔ " + new Date().toDateString();
 </script>
 
 </body>
