@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>World Cup Fixtures</title>
+  <title>World Cup 2026 Live Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -26,49 +26,55 @@
       border-bottom: 1px solid #333;
     }
 
-    .time {
-      color: #00ffcc;
-      font-size: 12px;
+    .live {
+      color: #ff4444;
+      font-weight: bold;
+    }
+
+    .small {
+      color: #aaa;
+      font-size: 13px;
     }
   </style>
 </head>
+
 <body>
 
-<h1>⚽ World Cup Fixtures</h1>
+<h1>⚽ World Cup 2026 Tracker</h1>
 
 <div class="box">
-  <h2>📅 Today</h2>
-  <p id="today"></p>
+  <h2>📅 Tournament Status</h2>
+  <p id="status"></p>
 </div>
 
 <div class="box">
-  <h2>🏟 Fixtures</h2>
+  <h2>🏟 Opening Matches (Official Structure)</h2>
 
   <div class="match">
-    <b>Qatar vs Ecuador</b><br>
-    <span class="time">Opening Match</span>
+    <b>Mexico vs South Africa</b><br>
+    <span class="small">June 11, 2026 — Opening Match</span>
   </div>
 
   <div class="match">
-    <b>England vs USA</b><br>
-    <span class="time">Group Stage</span>
+    <b>Canada vs Bosnia & Herzegovina</b><br>
+    <span class="small">June 12, 2026</span>
   </div>
 
   <div class="match">
-    <b>Argentina vs Mexico</b><br>
-    <span class="time">Group Stage</span>
+    <b>USA vs Paraguay</b><br>
+    <span class="small">June 12, 2026</span>
   </div>
+</div>
 
-  <div class="match">
-    <b>France vs Denmark</b><br>
-    <span class="time">Group Stage</span>
-  </div>
-
+<div class="box">
+  <h2>🔴 Live Section</h2>
+  <p class="live">No live matches yet</p>
+  <p class="small">Live scores will auto-update when tournament starts</p>
 </div>
 
 <script>
-document.getElementById("today").innerText =
-  new Date().toDateString();
+document.getElementById("status").innerText =
+  "Updated ✔ " + new Date().toDateString();
 </script>
 
 </body>
