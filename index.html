@@ -90,11 +90,11 @@ async function loadLive(){
   try{
 
     const res = await fetch("https://v3.football.api-sports.io/fixtures?live=all", {
-      method: "GET",
-      headers: {
-        "x-apisports-key": API_KEY
-      }
-    });
+  method: "GET",
+  headers: {
+    "x-apisports-key": API_KEY
+  }
+});
 
     const data = await res.json();
 
