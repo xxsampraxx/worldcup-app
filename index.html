@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>World Cup Sports Engine</title>
+  <title>World Cup Live Hub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body{
       margin:0;
       font-family: Arial;
-      background:#070b16;
+      background:#0b0f1a;
       color:white;
     }
 
     header{
-      background:#0f1a33;
-      padding:18px;
+      background:#111a2e;
+      padding:16px;
       text-align:center;
     }
 
-    h1{margin:0;color:#00ffcc;}
-
-    .wrap{padding:15px;}
+    h1{
+      margin:0;
+      color:#00ffcc;
+    }
 
     .card{
-      background:#141f35;
-      margin:12px 0;
+      background:#1a2233;
+      margin:10px;
       padding:15px;
-      border-radius:14px;
+      border-radius:12px;
     }
 
     .item{
       padding:10px;
-      border-bottom:1px solid #2a2a2a;
+      border-bottom:1px solid #333;
     }
 
-    .small{font-size:12px;color:#aaa;}
+    .small{
+      font-size:12px;
+      color:#aaa;
+    }
 
     .tag{
       display:inline-block;
@@ -43,6 +47,7 @@
       color:black;
       border-radius:20px;
       font-size:12px;
+      margin-top:6px;
     }
   </style>
 </head>
@@ -50,116 +55,119 @@
 <body>
 
 <header>
-  <h1>⚽ World Cup Sports Engine</h1>
-  <div class="tag">REAL DATA SYSTEM</div>
+  <h1>⚽ World Cup Live Hub</h1>
+  <div class="tag">REAL LIVE MODE</div>
 </header>
 
-<div class="wrap">
+<div class="card">
+  <h3>🔴 Live Matches</h3>
+  <div id="live">Loading live matches...</div>
+</div>
 
-  <div class="card">
-    <h3>📅 Fixtures</h3>
-    <div id="fixtures">Loading...</div>
-  </div>
+<div class="card">
+  <h3>📅 Fixtures</h3>
+  <div id="fixtures"></div>
+</div>
 
-  <div class="card">
-    <h3>📰 World Cup News</h3>
-    <div id="news">Loading...</div>
-  </div>
-
-  <div class="card">
-    <h3>🔴 Live Score Panel</h3>
-    <div class="small">
-      Live data will appear here during matchdays (API optional upgrade)
-    </div>
-    <div id="live">No live matches yet</div>
-  </div>
-
+<div class="card">
+  <h3>📰 News</h3>
+  <div id="news"></div>
 </div>
 
 <script>
 
-const API_KEY = 158c37714de1540823d2894ffd7e5291;
+const API_KEY = 158c37714del540823d2894ffd7e5291;
 
-
-
-/* LIVE SCORES */
-
+/* ---------------- LIVE SCORES ---------------- */
 async function loadLive(){
+
+  const liveBox = document.getElementById("live");
+  liveBox.innerHTML = "Loading live matches...";
 
   try{
 
     const res = await fetch(
-
       "https://v3.football.api-sports.io/fixtures?live=all",
-
       {
-
         method: "GET",
-
         headers: {
-
           "x-apisports-key": API_KEY
-
         }
-
       }
-
     );
 
     const data = await res.json();
 
-    let html = "";
-
     if(!data.response || data.response.length === 0){
-
-      html = "<div class='item'>No live matches right now</div>";
-
-    } else {
-
-      data.response.forEach(match => {
-
-        html += `
-
-          <div class="item">
-
-            <b>${match.teams.home.name}</b>
-
-            vs
-
-            <b>${match.teams.away.name}</b><br>
-
-            🔴 LIVE:
-
-            ${match.goals.home ?? 0}
-
-            -
-
-            ${match.goals.away ?? 0}
-
-          </div>
-
-        `;
-
-      });
-
+      liveBox.innerHTML = "No live matches right now ⚽";
+      return;
     }
 
-    document.getElementById("live").innerHTML = html;
+    let html = "";
+
+    data.response.forEach(match => {
+      html += `
+        <div class="item">
+          <b>${match.teams.home.name}</b>
+          vs
+          <b>${match.teams.away.name}</b><br>
+
+          🔴 LIVE:
+          ${match.goals.home ?? 0}
+          -
+          ${match.goals.away ?? 0}
+        </div>
+      `;
+    });
+
+    liveBox.innerHTML = html;
 
   } catch(err){
-
-    document.getElementById("live").innerHTML =
-
-      "<div class='item'>API Error - check key</div>";
-
+    console.log(err);
+    liveBox.innerHTML = "❌ API Error - check key or internet";
   }
-
 }
 
-loadLive();
+/* ---------------- FIXTURES ---------------- */
+function loadFixtures(){
 
-setInterval(loadLive, 60000);
+  const fixtures = [
+    "Mexico vs South Africa - June 11",
+    "USA vs Paraguay - June 12",
+    "Canada vs Bosnia - June 12",
+    "Argentina vs Austria - June 13",
+    "England vs Ghana - June 13",
+    "France vs Iraq - June 14"
+  ];
+
+  document.getElementById("fixtures").innerHTML =
+    fixtures.map(f => `<div class="item">${f}</div>`).join("");
+}
+
+/* ---------------- NEWS ---------------- */
+function loadNews(){
+
+  const news = [
+    "World Cup 2026 preparations underway",
+    "Teams finalize squad selections",
+    "Stadiums ready across USA, Canada, Mexico",
+    "Fans expect record-breaking tournament",
+    "FIFA confirms match schedule completion"
+  ];
+
+  document.getElementById("news").innerHTML =
+    news.map(n => `<div class="item">${n}</div>`).join("");
+}
+
+/* INIT */
+loadLive();
+loadFixtures();
+loadNews();
+
+/* AUTO REFRESH LIVE EVERY 30 SEC */
+setInterval(loadLive, 30000);
 
 </script>
+
 </body>
 </html>
