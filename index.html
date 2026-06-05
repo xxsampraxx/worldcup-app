@@ -88,44 +88,40 @@ document.getElementById("status")?.innerText =
 async function loadLive(){
 
   try{
-
     const res = await fetch("https://v3.football.api-sports.io/fixtures?live=all", {
-  method: "GET",
-  headers: {
-    "x-apisports-key": API_KEY
-  }
-});
+      method: "GET",
+      headers: {
+        "x-apisports-key": API_KEY
+      }
+    });
 
     const data = await res.json();
 
     let html = "";
 
-    if(!data.response || data.response.length === 0){
+    if(data.response.length === 0){
       html = "<div class='item'>No live matches right now</div>";
     } else {
 
-      data.response.slice(0,10).forEach(match => {
-
+      data.response.forEach(match => {
         html += `
           <div class="item">
             <b>${match.teams.home.name}</b> vs <b>${match.teams.away.name}</b><br>
-            <span class="small">
-              🔴 LIVE • ${match.goals.home ?? 0} - ${match.goals.away ?? 0}
-            </span>
+            🔴 LIVE: ${match.goals.home ?? 0} - ${match.goals.away ?? 0}
           </div>
         `;
       });
+
     }
 
     document.getElementById("live").innerHTML = html;
 
-  }catch(err){
+  } catch(e){
     document.getElementById("live").innerHTML =
-      "<div class='item'>⚠️ Live API not connected</div>";
+      "<div class='item'>API not working - check key</div>";
   }
 }
 
-/* AUTO REFRESH */
 loadLive();
 setInterval(loadLive, 60000);
 
