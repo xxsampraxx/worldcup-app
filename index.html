@@ -80,52 +80,86 @@
 
 const API_KEY = 158c37714de1540823d2894ffd7e5291;
 
-/* STATUS */
-document.getElementById("status")?.innerText =
-  "Live System Active ✔ " + new Date().toDateString();
 
-/* LOAD LIVE MATCHES */
+
+/* LIVE SCORES */
+
 async function loadLive(){
 
   try{
-    const res = await fetch("https://v3.football.api-sports.io/fixtures?live=all", {
-      method: "GET",
-      headers: {
-        "x-apisports-key": API_KEY
+
+    const res = await fetch(
+
+      "https://v3.football.api-sports.io/fixtures?live=all",
+
+      {
+
+        method: "GET",
+
+        headers: {
+
+          "x-apisports-key": API_KEY
+
+        }
+
       }
-    });
+
+    );
 
     const data = await res.json();
 
     let html = "";
 
-    if(data.response.length === 0){
+    if(!data.response || data.response.length === 0){
+
       html = "<div class='item'>No live matches right now</div>";
+
     } else {
 
       data.response.forEach(match => {
+
         html += `
+
           <div class="item">
-            <b>${match.teams.home.name}</b> vs <b>${match.teams.away.name}</b><br>
-            🔴 LIVE: ${match.goals.home ?? 0} - ${match.goals.away ?? 0}
+
+            <b>${match.teams.home.name}</b>
+
+            vs
+
+            <b>${match.teams.away.name}</b><br>
+
+            🔴 LIVE:
+
+            ${match.goals.home ?? 0}
+
+            -
+
+            ${match.goals.away ?? 0}
+
           </div>
+
         `;
+
       });
 
     }
 
     document.getElementById("live").innerHTML = html;
 
-  } catch(e){
+  } catch(err){
+
     document.getElementById("live").innerHTML =
-      "<div class='item'>API not working - check key</div>";
+
+      "<div class='item'>API Error - check key</div>";
+
   }
+
 }
 
 loadLive();
+
 setInterval(loadLive, 60000);
 
 </script>
-
 </body>
 </html>
