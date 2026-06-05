@@ -1,72 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>World Cup GOD MODE</title>
+  <title>World Cup App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body{
       margin:0;
       font-family: Arial;
-      background:#070b16;
+      background:#0b0f1a;
       color:white;
+      text-align:center;
     }
 
     header{
-      background:#0f1a33;
-      padding:18px;
-      text-align:center;
-      position:sticky;
-      top:0;
+      background:#111a2e;
+      padding:20px;
     }
 
-    h1{
-      margin:0;
-      color:#00ffcc;
-    }
+    h1{color:#00ffcc;margin:0;}
 
-    .wrap{padding:15px;}
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-
-    @media(min-width:800px){
-      .grid{grid-template-columns:1fr 1fr;}
-    }
-
-    .card{
-      background:#151f35;
+    .box{
+      background:#1a2233;
+      margin:10px;
       padding:15px;
-      border-radius:14px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.4);
+      border-radius:12px;
     }
 
     .match{
-      padding:10px 0;
-      border-bottom:1px solid #2a2a2a;
+      padding:10px;
+      border-bottom:1px solid #333;
     }
 
-    .tag{
-      display:inline-block;
-      padding:4px 10px;
-      background:#00ffcc;
-      color:black;
-      border-radius:20px;
+    .small{
       font-size:12px;
-      margin-top:6px;
-    }
-
-    .live{color:red;font-weight:bold;}
-    .small{font-size:12px;color:#aaa;}
-    button{
-      background:#00ffcc;
-      border:none;
-      padding:8px 12px;
-      border-radius:8px;
-      margin-top:8px;
+      color:#aaa;
     }
   </style>
 </head>
@@ -74,97 +42,50 @@
 <body>
 
 <header>
-  <h1>⚽ World Cup GOD MODE</h1>
-  <div class="tag">ULTIMATE DASHBOARD</div>
+  <h1>⚽ World Cup Tracker</h1>
 </header>
 
-<div class="wrap">
+<div class="box">
+  <h2>📅 Status</h2>
+  <p id="status"></p>
+</div>
 
-  <div class="grid">
-
-    <div class="card">
-      <h3>📅 System Status</h3>
-      <p id="status"></p>
-      <p class="small">Auto refresh every 60s</p>
-    </div>
-
-    <div class="card">
-      <h3>🔴 Live Matches</h3>
-      <div id="live">Loading data...</div>
-    </div>
-
-    <div class="card">
-      <h3>⭐ Favorite Team</h3>
-      <p class="small">Tap to select</p>
-      <button onclick="setFav('Brazil')">Brazil</button>
-      <button onclick="setFav('Argentina')">Argentina</button>
-      <button onclick="setFav('France')">France</button>
-      <p id="fav"></p>
-    </div>
-
-    <div class="card">
-      <h3>🏆 World Cup Mode</h3>
-      <p class="small">
-        Groups + standings system ready for live tournament data.
-      </p>
-    </div>
-
-  </div>
-
+<div class="box">
+  <h2>🏟 Fixtures</h2>
+  <div id="matches">Loading...</div>
 </div>
 
 <script>
 document.getElementById("status").innerText =
-  "System Active ✔ " + new Date().toDateString();
+  "Updated ✔ " + new Date().toDateString();
 
-let favorite = "";
+function load(){
 
-function setFav(team){
-  favorite = team;
-  document.getElementById("fav").innerText =
-    "⭐ Your team: " + team;
+  const fixtures = [
+    {home:"Qatar", away:"Ecuador", time:"Opening Match"},
+    {home:"England", away:"USA", time:"Group Stage"},
+    {home:"Argentina", away:"Mexico", time:"Group Stage"},
+    {home:"France", away:"Denmark", time:"Group Stage"},
+    {home:"Brazil", away:"Serbia", time:"Group Stage"},
+    {home:"Spain", away:"Germany", time:"Group Stage"}
+  ];
+
+  let html = "";
+
+  fixtures.forEach(m=>{
+    html += `
+      <div class="match">
+        <b>${m.home}</b> vs <b>${m.away}</b><br>
+        <span class="small">${m.time}</span>
+      </div>
+    `;
+  });
+
+  document.getElementById("matches").innerHTML = html;
 }
 
-/* SAFE DATA ENGINE */
-const API_KEY = 6348fdbd697a4e0487a534bde9a0030b;
-
-async function loadLive(){
-  try{
-    const res = await fetch("https://api.football-data.org/v4/competitions/WC/matches",{
-      headers:{ "X-Auth-Token": API_KEY }
-    });
-
-    const data = await res.json();
-
-    let html = "";
-
-    if(!data.matches){
-      html = "<p>No live data yet</p>";
-    } else {
-      data.matches.slice(0,8).forEach(m=>{
-        let highlight = (favorite && m.homeTeam.name.includes(favorite)) ? "🔴 " : "";
-
-        html += `
-          <div class="match">
-            ${highlight}<b>${m.homeTeam.name}</b> vs <b>${m.awayTeam.name}</b><br>
-            <span class="small">
-              ${m.score.fullTime.home ?? 0} - ${m.score.fullTime.away ?? 0}
-            </span>
-          </div>
-        `;
-      });
-    }
-
-    document.getElementById("live").innerHTML = html;
-
-  } catch(e){
-    document.getElementById("live").innerHTML =
-      "<p class='small'>API not connected (safe mode running)</p>";
-  }
-}
-
-loadLive();
-setInterval(loadLive,60000);
+load();
+setInterval(load,60000);
 </script>
 
 </body>
