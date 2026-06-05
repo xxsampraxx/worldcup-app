@@ -1,92 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>World Cup App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body{
-      margin:0;
-      font-family: Arial;
-      background:#0b0f1a;
-      color:white;
-      text-align:center;
-    }
-
-    header{
-      background:#111a2e;
-      padding:20px;
-    }
-
-    h1{color:#00ffcc;margin:0;}
-
-    .box{
-      background:#1a2233;
-      margin:10px;
-      padding:15px;
-      border-radius:12px;
-    }
-
-    .match{
-      padding:10px;
-      border-bottom:1px solid #333;
-    }
-
-    .small{
-      font-size:12px;
-      color:#aaa;
-    }
-  </style>
-</head>
-
-<body>
-
-<header>
-  <h1>⚽ World Cup Tracker</h1>
-</header>
-
-<div class="box">
-  <h2>📅 Status</h2>
-  <p id="status"></p>
-</div>
-
-<div class="box">
-  <h2>🏟 Fixtures</h2>
-  <div id="matches">Loading...</div>
-</div>
-
 <script>
-document.getElementById("status").innerText =
-  "Updated ✔ " + new Date().toDateString();
 
-function load(){
+const API_KEY = 158c37714de1540823d2894ffd7e5291;
 
-  const fixtures = [
-    {home:"Qatar", away:"Ecuador", time:"Opening Match"},
-    {home:"England", away:"USA", time:"Group Stage"},
-    {home:"Argentina", away:"Mexico", time:"Group Stage"},
-    {home:"France", away:"Denmark", time:"Group Stage"},
-    {home:"Brazil", away:"Serbia", time:"Group Stage"},
-    {home:"Spain", away:"Germany", time:"Group Stage"}
-  ];
+/* STATUS */
+document.getElementById("status")?.innerText =
+  "Live System Active ✔ " + new Date().toDateString();
 
-  let html = "";
+/* LOAD LIVE MATCHES */
+async function loadLive(){
 
-  fixtures.forEach(m=>{
-    html += `
-      <div class="match">
-        <b>${m.home}</b> vs <b>${m.away}</b><br>
-        <span class="small">${m.time}</span>
-      </div>
-    `;
-  });
+  try{
 
-  document.getElementById("matches").innerHTML = html;
+    const res = await fetch("https://v3.football.api-sports.io/fixtures?live=all", {
+      method: "GET",
+      headers: {
+        "x-apisports-key": API_KEY
+      }
+    });
+
+    const data = await res.json();
+
+    let html = "";
+
+    if(!data.response || data.response.length === 0){
+      html = "<div class='item'>No live matches right now</div>";
+    } else {
+
+      data.response.slice(0,10).forEach(match => {
+
+        html += `
+          <div class="item">
+            <b>${match.teams.home.name}</b> vs <b>${match.teams.away.name}</b><br>
+            <span class="small">
+              🔴 LIVE • ${match.goals.home ?? 0} - ${match.goals.away ?? 0}
+            </span>
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById("live").innerHTML = html;
+
+  }catch(err){
+    document.getElementById("live").innerHTML =
+      "<div class='item'>⚠️ Live API not connected</div>";
+  }
 }
 
-load();
-setInterval(load,60000);
-</script>
+/* AUTO REFRESH */
+loadLive();
+setInterval(loadLive, 60000);
 
-</body>
-</html>
+</script>
