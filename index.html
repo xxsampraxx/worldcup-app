@@ -1,3 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>World Cup Sports Engine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body{
+      margin:0;
+      font-family: Arial;
+      background:#070b16;
+      color:white;
+    }
+
+    header{
+      background:#0f1a33;
+      padding:18px;
+      text-align:center;
+    }
+
+    h1{margin:0;color:#00ffcc;}
+
+    .wrap{padding:15px;}
+
+    .card{
+      background:#141f35;
+      margin:12px 0;
+      padding:15px;
+      border-radius:14px;
+    }
+
+    .item{
+      padding:10px;
+      border-bottom:1px solid #2a2a2a;
+    }
+
+    .small{font-size:12px;color:#aaa;}
+
+    .tag{
+      display:inline-block;
+      padding:4px 10px;
+      background:#00ffcc;
+      color:black;
+      border-radius:20px;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>⚽ World Cup Sports Engine</h1>
+  <div class="tag">REAL DATA SYSTEM</div>
+</header>
+
+<div class="wrap">
+
+  <div class="card">
+    <h3>📅 Fixtures</h3>
+    <div id="fixtures">Loading...</div>
+  </div>
+
+  <div class="card">
+    <h3>📰 World Cup News</h3>
+    <div id="news">Loading...</div>
+  </div>
+
+  <div class="card">
+    <h3>🔴 Live Score Panel</h3>
+    <div class="small">
+      Live data will appear here during matchdays (API optional upgrade)
+    </div>
+    <div id="live">No live matches yet</div>
+  </div>
+
+</div>
+
 <script>
 
 const API_KEY = 158c37714de1540823d2894ffd7e5291;
@@ -52,3 +130,6 @@ loadLive();
 setInterval(loadLive, 60000);
 
 </script>
+
+</body>
+</html>
